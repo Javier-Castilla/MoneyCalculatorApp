@@ -1,4 +1,3 @@
 package software.ulpgc.model;
 
-public class Country {
-}
+public record Country(String name, String code) {}
