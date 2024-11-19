@@ -21,7 +21,7 @@ public class ERIOCurrencyLoader implements CurrencyLoader {
         Map<String, Currency> currencies = new HashMap<>();
         Map<String, JsonElement> symbols = new Gson().fromJson(json, JsonObject.class).getAsJsonObject("symbols").asMap();
         for (String symbol : symbols.keySet()) {
-            currencies.put(symbol, new Currency(symbol, symbols.get(symbol).getAsString()));
+            currencies.put(symbol, new Currency(symbol, symbols.get(symbol).getAsString(), null));
         }
         return currencies;
     }
