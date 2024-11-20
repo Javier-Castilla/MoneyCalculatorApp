@@ -1,15 +1,18 @@
 package software.ulpgc.moneycalculator.control;
 
 import software.ulpgc.moneycalculator.model.Currency;
-import software.ulpgc.view.CurrencyDialog;
-import software.ulpgc.view.SwingCurrencyDialog;
+import software.ulpgc.moneycalculator.view.CurrencyDialog;
+import software.ulpgc.moneycalculator.view.CurrencyRenderer;
+import software.ulpgc.moneycalculator.view.SwingCurrencyDialog;
 
 public class ToggleCurrencyDialogRendererCommand implements Command {
-    private final CurrencyDialog currencyDialog;
+    private final CurrencyDialog fromCurrencyDialog;
+    private final CurrencyDialog toCurrencyDialog;
     private int representationId;
 
-    public ToggleCurrencyDialogRendererCommand(CurrencyDialog currencyDialog) {
-        this.currencyDialog = currencyDialog;
+    public ToggleCurrencyDialogRendererCommand(CurrencyDialog fromCurrencyDialog, CurrencyDialog toCurrencyDialog) {
+        this.fromCurrencyDialog = fromCurrencyDialog;
+        this.toCurrencyDialog = toCurrencyDialog;
         this.representationId = 0;
     }
 
@@ -29,6 +32,7 @@ public class ToggleCurrencyDialogRendererCommand implements Command {
     }
 
     private void changeRenderer(Currency.CurrencyRepresentation representation) {
-        ((SwingCurrencyDialog) currencyDialog).setRenderer(representation);
+        ((SwingCurrencyDialog) fromCurrencyDialog).setRenderer(representation);
+        ((SwingCurrencyDialog) toCurrencyDialog).setRenderer(representation);
     }
 }

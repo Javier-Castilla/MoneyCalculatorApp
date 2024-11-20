@@ -3,9 +3,9 @@ package software.ulpgc.moneycalculator.control;
 import software.ulpgc.moneycalculator.model.Currency;
 import software.ulpgc.moneycalculator.model.ExchangeRate;
 import software.ulpgc.moneycalculator.model.Money;
-import software.ulpgc.view.CurrencyDialog;
-import software.ulpgc.view.MoneyDialog;
-import software.ulpgc.view.MoneyDisplay;
+import software.ulpgc.moneycalculator.view.CurrencyDialog;
+import software.ulpgc.moneycalculator.view.MoneyDialog;
+import software.ulpgc.moneycalculator.view.MoneyDisplay;
 
 import java.util.Map;
 

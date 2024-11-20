@@ -1,26 +1,29 @@
 package software.ulpgc.moneycalculator.control;
 
 import software.ulpgc.moneycalculator.model.Currency;
-import software.ulpgc.view.CurrencyDialog;
+import software.ulpgc.moneycalculator.view.CurrencyDialog;
 
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class ToggleCurrencyDialogOrderCommand implements Command {
-    private final CurrencyDialog currencyDialog;
+    private final CurrencyDialog fromCurrencyDialog;
+    private final CurrencyDialog toCurrencyDialog;
     private final Map<String, Currency> currencies;
     private int orderId = 0;
 
-    public ToggleCurrencyDialogOrderCommand(CurrencyDialog currencyDialog, Map<String, Currency> currencies) {
-        this.currencyDialog = currencyDialog;
+    public ToggleCurrencyDialogOrderCommand(CurrencyDialog fromCurrencyDialog, CurrencyDialog toCurrencyDialog, Map<String, Currency> currencies) {
+        this.fromCurrencyDialog = fromCurrencyDialog;
+        this.toCurrencyDialog = toCurrencyDialog;
         this.currencies = currencies;
     }
 
     @Override
     public void execute() {
         orderId = (orderId + 1) % 3;
-        currencyDialog.redefine(sortCurrencies());
+        fromCurrencyDialog.redefine(sortCurrencies());
+        toCurrencyDialog.redefine(sortCurrencies());
     }
 
     private Map<String, Currency> sortCurrencies() {

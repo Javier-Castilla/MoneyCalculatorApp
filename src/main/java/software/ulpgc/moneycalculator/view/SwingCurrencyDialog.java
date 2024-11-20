@@ -1,18 +1,27 @@
-package software.ulpgc.view;
+package software.ulpgc.moneycalculator.view;
 
 import software.ulpgc.moneycalculator.model.Currency;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Map;
-import java.util.function.Function;
 
 public class SwingCurrencyDialog extends JPanel implements CurrencyDialog {
     private JComboBox<Currency> selector;
+    private JLabel label;
 
     @Override
-    public CurrencyDialog define(Map<String, Currency> currencies) {
+    public CurrencyDialog define(String text, Map<String, Currency> currencies) {
+        add(this.label= createCurrencySelectorLabel(text));
         add(this.selector = createCurrencySelector(currencies));
         return this;
+    }
+
+    private JLabel createCurrencySelectorLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setPreferredSize(new Dimension(35, 20));
+        label.setMaximumSize(new Dimension(35, 20));
+        return label;
     }
 
     public CurrencyDialog redefine(Map<String, Currency> currencies) {
@@ -37,8 +46,22 @@ public class SwingCurrencyDialog extends JPanel implements CurrencyDialog {
         return addSelectorItems(currencyCombo, currencies);
     }
 
+    public JComboBox<Currency> getSelector() {
+        return selector;
+    }
+
+    public JLabel getLabel() {
+        return label;
+    }
+
     @Override
     public Currency get() {
         return selector.getItemAt(selector.getSelectedIndex());
+    }
+
+    @Override
+    public CurrencyDialog set(Currency currency) {
+        selector.setSelectedItem(currency);
+        return this;
     }
 }
