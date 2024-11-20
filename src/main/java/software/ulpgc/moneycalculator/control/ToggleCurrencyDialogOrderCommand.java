@@ -8,22 +8,19 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ToggleCurrencyDialogOrderCommand implements Command {
-    private final CurrencyDialog fromCurrencyDialog;
-    private final CurrencyDialog toCurrencyDialog;
+    private final CurrencyDialog currencyDialog;
     private final Map<String, Currency> currencies;
     private int orderId = 0;
 
-    public ToggleCurrencyDialogOrderCommand(CurrencyDialog currencyDialog, CurrencyDialog toCurrencyDialog, Map<String, Currency> currencies) {
-        this.fromCurrencyDialog = currencyDialog;
-        this.toCurrencyDialog = toCurrencyDialog;
+    public ToggleCurrencyDialogOrderCommand(CurrencyDialog currencyDialog, Map<String, Currency> currencies) {
+        this.currencyDialog = currencyDialog;
         this.currencies = currencies;
     }
 
     @Override
     public void execute() {
-        orderId++;
-        fromCurrencyDialog.redefine(sortCurrencies());
-        toCurrencyDialog.redefine(sortCurrencies());
+        orderId = (orderId + 1) % 3;
+        currencyDialog.redefine(sortCurrencies());
     }
 
     private Map<String, Currency> sortCurrencies() {

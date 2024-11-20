@@ -11,8 +11,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ERIOExchangeRateLoader implements ExchangeRateLoader {
@@ -23,19 +22,19 @@ public class ERIOExchangeRateLoader implements ExchangeRateLoader {
     }
 
     @Override
-    public List<ExchangeRate> load() throws MalformedURLException {
-        return exchangeRateList(loadJson());
+    public Map<Currency, ExchangeRate> load() throws MalformedURLException {
+        return exchangeRateMap(loadJson());
     }
 
-    private List<ExchangeRate> exchangeRateList(String json) {
-        List<ExchangeRate> exchangeRates = new ArrayList<>();
+    private Map<Currency, ExchangeRate> exchangeRateMap(String json) {
+        Map<Currency, ExchangeRate> exchangeRates = new HashMap<>();
         String baseCurrency = new Gson().fromJson(json, JsonObject.class).get("base").getAsString();
         Map<String, JsonElement> exchanges = new Gson()
                 .fromJson(json, JsonObject.class)
                 .getAsJsonObject("rates")
                 .asMap();
         for (String code : exchanges.keySet()) {
-            exchangeRates.add(new ExchangeRate(LocalDate.now(), exchanges.get(code).getAsDouble(), currencies.get(baseCurrency), currencies.get(code)));
+            exchangeRates.put(currencies.get(code), new ExchangeRate(LocalDate.now(), exchanges.get(code).getAsDouble(), currencies.get(baseCurrency), currencies.get(code)));
         }
         return exchangeRates;
     }
