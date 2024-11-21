@@ -43,6 +43,7 @@ public class SwingCurrencyDialog extends JPanel implements CurrencyDialog {
 
     private JComboBox<Currency> createCurrencySelector(Map<String, Currency> currencies) {
         JComboBox<Currency> currencyCombo = new JComboBox<>();
+        currencyCombo.setBackground(Color.WHITE);
         return addSelectorItems(currencyCombo, currencies);
     }
 

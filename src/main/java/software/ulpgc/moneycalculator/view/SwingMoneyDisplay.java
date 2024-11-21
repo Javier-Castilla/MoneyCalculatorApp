@@ -3,6 +3,7 @@ package software.ulpgc.moneycalculator.view;
 import software.ulpgc.moneycalculator.model.Money;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SwingMoneyDisplay extends JPanel implements MoneyDisplay {
     private final JLabel label;

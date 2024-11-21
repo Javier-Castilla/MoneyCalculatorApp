@@ -11,21 +11,25 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 
 public class SwingMoneyDialog extends JPanel implements MoneyDialog {
-    private final JTextField textField;
+    private JTextField textField;
     private final CurrencyDialog currencyDialog;
 
     public SwingMoneyDialog(CurrencyDialog currencyDialog) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(textField = (JTextField) createMoneyEntry());
+        add(createMoneyEntry());
         add((Component) (this.currencyDialog = currencyDialog));
         setMaximumSize(new Dimension(600, 100));
     }
 
     private Component createMoneyEntry() {
-        JTextField textField = new JTextField();
+        JPanel panel = new JPanel(new FlowLayout());
+        JLabel label = new JLabel("Amount: ");
+        panel.add(label);
+        this.textField = new JTextField();
+        panel.add(textField);
         textField.setColumns(20);
         textField.setMaximumSize(new Dimension(300, 20));
-        return textField;
+        return panel;
     }
 
     @Override

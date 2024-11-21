@@ -35,9 +35,15 @@ public class MainFrame extends JFrame {
 
     private Component createTitlePanel() {
         JPanel panel = new JPanel();
-        JLabel label = new JLabel("MoneyCalculator");
-        label.setAlignmentX(CENTER_ALIGNMENT);
-        panel.add(label);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JLabel title = new JLabel("MoneyCalculator");
+        title.setFont(new Font("Arial", Font.BOLD, 30));
+        title.setAlignmentX(CENTER_ALIGNMENT);
+        panel.add(title);
+        JLabel name = new JLabel("Powered by Javier Castilla");
+        name.setFont(new Font("Arial", Font.BOLD, 15));
+        name.setAlignmentX(CENTER_ALIGNMENT);
+        panel.add(name);
         return panel;
     }
 
@@ -51,7 +57,15 @@ public class MainFrame extends JFrame {
     }
 
     private MoneyDialog createMoneyDialog() {
-        return new SwingMoneyDialog(createCurrencyDialog());
+        SwingMoneyDialog moneyDialog = new SwingMoneyDialog(createCurrencyDialog());
+        moneyDialog.getTextField().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                SwingUtilities.invokeLater(() -> commands.get("calculate"));
+            }
+        });
+        return moneyDialog;
     }
 
     private CurrencyDialog createCurrencyDialog() {
@@ -89,7 +103,7 @@ public class MainFrame extends JFrame {
     }
 
     private Component toolbar() {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new GridLayout(1, 4, 0, 0));
         panel.add(createCalculateButton());
         panel.add(createInvertButton());
         panel.add(createToggleCurrencyRepresentationButton());
@@ -98,7 +112,7 @@ public class MainFrame extends JFrame {
     }
 
     private Component createInvertButton() {
-        JButton button = new JButton("Invert");
+        CustomizedButton button = new CustomizedButton("Invert");
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,19 +124,19 @@ public class MainFrame extends JFrame {
     }
 
     private Component createToggleCurrencyRepresentationButton() {
-        JButton button = new JButton("Toggle Repr.");
+        CustomizedButton button = new CustomizedButton("Toggle Repr.");
         button.addActionListener(e -> commands.get("toggle_representation").execute());
         return button;
     }
 
     private Component createToggleCurrencyOrderButton() {
-        JButton button = new JButton("Toggle Order");
+        CustomizedButton button = new CustomizedButton("Toggle Order");
         button.addActionListener(e -> commands.get("toggle_order").execute());
         return button;
     }
 
     private Component createCalculateButton() {
-        JButton button = new JButton("Calculate");
+        CustomizedButton button = new CustomizedButton("Calculate");
         button.addActionListener(e -> commands.get("calculate").execute());
         return button;
     }
