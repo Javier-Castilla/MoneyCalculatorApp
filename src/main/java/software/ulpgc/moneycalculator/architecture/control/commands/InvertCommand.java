@@ -1,5 +1,6 @@
-package software.ulpgc.moneycalculator.architecture.control;
+package software.ulpgc.moneycalculator.architecture.control.commands;
 
+import software.ulpgc.moneycalculator.architecture.control.Command;
 import software.ulpgc.moneycalculator.architecture.view.MoneyDialog;
 import software.ulpgc.moneycalculator.architecture.model.Money;
 

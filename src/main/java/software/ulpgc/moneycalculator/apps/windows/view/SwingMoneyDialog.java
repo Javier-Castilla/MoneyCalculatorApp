@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class SwingMoneyDialog extends JPanel implements MoneyDialog {
     private final SwingAmountEntry amountEntry;
@@ -104,9 +103,8 @@ public class SwingMoneyDialog extends JPanel implements MoneyDialog {
     }
 
     @Override
-    public MoneyDialog define(List<Currency> currencies) {
+    public void define(List<Currency> currencies) {
         currencyDialog.define(currencies);
-        return this;
     }
 
     @Override
@@ -115,11 +113,10 @@ public class SwingMoneyDialog extends JPanel implements MoneyDialog {
     }
 
     @Override
-    public MoneyDialog set(Money money) {
+    public void set(Money money) {
         amountEntry.setText(String.format(Locale.US, "%.2f", money.amount()));
         currencyDialog.set(money.currency());
         revalidate();
-        return this;
     }
 
     @Override

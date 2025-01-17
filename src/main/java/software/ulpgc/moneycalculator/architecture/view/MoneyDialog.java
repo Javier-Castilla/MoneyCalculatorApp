@@ -7,9 +7,12 @@ import java.util.List;
 
 public interface MoneyDialog {
     Money get();
-    MoneyDialog define(List<Currency> currencies);
+
+    void define(List<Currency> currencies);
+
     CurrencyDialog getCurrencyDialog();
-    MoneyDialog set(Money money);
+
+    void set(Money money);
 
     boolean isFocused();
 }

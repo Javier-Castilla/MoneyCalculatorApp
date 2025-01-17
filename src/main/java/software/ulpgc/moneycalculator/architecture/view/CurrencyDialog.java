@@ -5,16 +5,27 @@ import software.ulpgc.moneycalculator.architecture.model.Currency;
 import java.util.List;
 
 public interface CurrencyDialog {
-    CurrencyDialog define(List<Currency> currencies);
-    CurrencyDialog redefine(List<Currency> currencies);
+    void define(List<Currency> currencies);
+
+    void redefine(List<Currency> currencies);
+
     List<Currency> getDefinition();
+
     Currency get();
+
     OrderMode getOrderMode();
+
     OrderDirection getOrderDirection();
-    CurrencyDialog set(Currency currency);
-    CurrencyDialog setOrderMode(OrderMode orderMode);
-    CurrencyDialog setOrderDirection(OrderDirection orderDirection);
-    boolean isFocused();
+
+    Currency.CurrencyRepresentation getCurrencyRepresentation();
+
+    void set(Currency currency);
+
+    void setOrderMode(OrderMode orderMode);
+
+    void setOrderDirection(OrderDirection orderDirection);
+
+    void setCurrencyRepresentation(Currency.CurrencyRepresentation currencyRepresentation);
 
     enum OrderMode {
         NameOrder, CodeOrder

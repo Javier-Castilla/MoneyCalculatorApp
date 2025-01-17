@@ -2,7 +2,6 @@ package software.ulpgc.moneycalculator.apps.windows.view;
 
 import software.ulpgc.moneycalculator.apps.windows.view.customization.Colors;
 import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
-import software.ulpgc.moneycalculator.architecture.model.Money;
 import software.ulpgc.moneycalculator.architecture.view.ExchangeRateDisplay;
 
 import javax.swing.*;
@@ -23,9 +22,8 @@ public class SwingExchangeRateDisplay extends JPanel implements ExchangeRateDisp
     }
 
     @Override
-    public ExchangeRateDisplay show(ExchangeRate exchangeRate) {
+    public void show(ExchangeRate exchangeRate) {
         updateMoneyLabel(exchangeRate);
-        return this;
     }
 
     private void updateMoneyLabel(ExchangeRate exchangeRate) {

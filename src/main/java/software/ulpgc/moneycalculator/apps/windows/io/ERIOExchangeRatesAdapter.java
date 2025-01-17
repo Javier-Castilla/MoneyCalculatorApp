@@ -21,18 +21,12 @@ public class ERIOExchangeRatesAdapter implements ExchangeRateAdapter {
         return adaptToMap((ExchangeRatesGetResponse) object);
     }
 
-    @Override
-    public ExchangeRate adapt(Object object) {
-        return null;
-    }
-
     private Map<Currency, ExchangeRate> adaptToMap(ExchangeRatesGetResponse response) {
-        System.out.println(response.rates());
         return currencyMap.values().stream()
                 .filter(c -> response.rates().containsKey(c.code()))
                 .collect(Collectors.toMap(
                         c -> c,
-                        c -> new ExchangeRate(LocalDate.now(), response.rates().get(c.code()), currencyMap.get(response.base()), c)
+                        c -> new ExchangeRate(LocalDate.parse(response.date()), response.rates().get(c.code()), currencyMap.get(response.base()), c)
                 ));
     }
 

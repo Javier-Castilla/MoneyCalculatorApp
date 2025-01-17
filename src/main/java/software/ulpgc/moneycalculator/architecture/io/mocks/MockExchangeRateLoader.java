@@ -1,4 +1,4 @@
-package software.ulpgc.moneycalculator.mocks;
+package software.ulpgc.moneycalculator.architecture.io.mocks;
 
 import software.ulpgc.moneycalculator.architecture.io.ExchangeRateLoader;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
@@ -21,9 +21,14 @@ public class MockExchangeRateLoader implements ExchangeRateLoader {
     public Map<Currency, ExchangeRate> load() {
         return currencyMap.values().stream()
                 .collect(Collectors.toMap(
-                        e -> e,
-                        e -> new ExchangeRate(LocalDate.now(), 1, currencyMap.get("EUR"), e)
+                        c -> c,
+                        c -> new ExchangeRate(LocalDate.now(), 1, currencyMap.get("EUR"), c)
                 ));
+    }
+
+    @Override
+    public Map<Currency, ExchangeRate> load(Map<Currency, ExchangeRate> exchangeRateMap) throws IOException {
+        return Map.of();
     }
 
     @Override
@@ -36,7 +41,7 @@ public class MockExchangeRateLoader implements ExchangeRateLoader {
     }
 
     @Override
-    public ExchangeRate load(LocalDate date, Currency currency) throws IOException {
-        return new ExchangeRate(date, 2, currencyMap.get("EUR"), currency);
+    public Map<Currency, ExchangeRate> load(Map<Currency, ExchangeRate> exchangeRateMap, LocalDate date, Currency... currencies) throws IOException {
+        return Map.of();
     }
 }

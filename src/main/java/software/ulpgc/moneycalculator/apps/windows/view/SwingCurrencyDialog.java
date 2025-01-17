@@ -9,33 +9,33 @@ import software.ulpgc.moneycalculator.apps.windows.view.customization.components
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SwingCurrencyDialog extends JPanel implements CurrencyDialog {
     private CustomSwingComboBox<Currency> selector;
     private OrderMode orderMode;
     private OrderDirection orderDirection;
+    private Currency.CurrencyRepresentation currencyRepresentation;
 
     public SwingCurrencyDialog() {
         this.setBackground(Colors.AlmostWhite.value());
         this.selector = new CustomSwingComboBox<>();
         this.orderMode = OrderMode.NameOrder;
         this.orderDirection = OrderDirection.DescendingOrder;
+        this.currencyRepresentation = Currency.CurrencyRepresentation.CurrencyName;
     }
 
     @Override
-    public CurrencyDialog define(List<Currency> currencies) {
+    public void define(List<Currency> currencies) {
+        removeAll();
         add(addSelectorItems(currencies));
         setRenderer(Currency.CurrencyRepresentation.CurrencyName);
-        return this;
     }
 
-    public CurrencyDialog redefine(List<Currency> currencies) {
+    public void redefine(List<Currency> currencies) {
         Currency currentCurrency = get();
         selector.removeAllItems();
         addSelectorItems(currencies);
         selector.setSelectedItem(currentCurrency);
-        return this;
     }
 
     @Override
@@ -47,13 +47,13 @@ public class SwingCurrencyDialog extends JPanel implements CurrencyDialog {
     }
 
     private CustomSwingComboBox<Currency> addSelectorItems(List<Currency> currencies) {
-        currencies.forEach(c -> selector.addItem(c));
+        selector.removeAllItems();
+        currencies.forEach(selector::addItem);
         return selector;
     }
 
-    public SwingCurrencyDialog setRenderer(Currency.CurrencyRepresentation representation) {
+    public void setRenderer(Currency.CurrencyRepresentation representation) {
         selector.setRenderer(new CustomSwingCurrencyRenderer(Currency.getMethodsMap().get(representation)));
-        return this;
     }
 
     public JComboBox<Currency> getSelector() {
@@ -76,25 +76,28 @@ public class SwingCurrencyDialog extends JPanel implements CurrencyDialog {
     }
 
     @Override
-    public CurrencyDialog set(Currency currency) {
+    public Currency.CurrencyRepresentation getCurrencyRepresentation() {
+        return currencyRepresentation;
+    }
+
+    @Override
+    public void set(Currency currency) {
         selector.setSelectedItem(currency);
-        return this;
     }
 
     @Override
-    public CurrencyDialog setOrderMode(OrderMode orderMode) {
+    public void setOrderMode(OrderMode orderMode) {
         this.orderMode = orderMode;
-        return this;
     }
 
     @Override
-    public CurrencyDialog setOrderDirection(OrderDirection orderDirection) {
+    public void setOrderDirection(OrderDirection orderDirection) {
         this.orderDirection = orderDirection;
-        return this;
     }
 
     @Override
-    public boolean isFocused() {
-        return this.selector.hasFocus();
+    public void setCurrencyRepresentation(Currency.CurrencyRepresentation currencyRepresentation) {
+        this.currencyRepresentation = currencyRepresentation;
     }
+
 }

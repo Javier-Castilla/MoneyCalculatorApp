@@ -24,10 +24,16 @@ public class ERIOExchangeRateLoader implements ExchangeRateLoader {
         this.currencyMap = currencyMap;
     }
 
-
     @Override
     public Map<Currency, ExchangeRate> load() throws IOException {
         return adapter.adaptToMap(deserializer.deserialize(reader.read()));
+    }
+
+    @Override
+    public Map<Currency, ExchangeRate> load(Map<Currency, ExchangeRate> exchangeRateMap) throws IOException {
+        exchangeRateMap.clear();
+        exchangeRateMap.putAll(load());
+        return exchangeRateMap;
     }
 
     @Override
@@ -36,7 +42,9 @@ public class ERIOExchangeRateLoader implements ExchangeRateLoader {
     }
 
     @Override
-    public ExchangeRate load(LocalDate date, Currency currency) throws IOException {
-        return adapter.adapt(deserializer.deserialize(reader.readOfDate(date, currencyMap.get("EUR"), currency)));
+    public Map<Currency, ExchangeRate> load(Map<Currency, ExchangeRate> exchangeRateMap, LocalDate date, Currency... currencies) throws IOException {
+        exchangeRateMap.clear();
+        exchangeRateMap.putAll(load(date, currencies));
+        return exchangeRateMap;
     }
 }

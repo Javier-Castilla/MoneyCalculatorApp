@@ -17,10 +17,8 @@ public class ERIOExchangeRateReader implements ExchangeRateReader {
 
     @Override
     public String readOfDate(LocalDate date, Currency base, Currency... currencies) {
-        return switch (currencies.length) {
-            case 0 -> read(ERIOAPI.exchangeRatesOfDate(date));
-            default -> read(ERIOAPI.exchangeRatesOfDate(date) + ERIOAPI.exchangeRatesFrom(base, currencies));
-        };
+        if (currencies.length == 0) return read(ERIOAPI.exchangeRatesOfDate(date)+ ERIOAPI.KEY);
+        else return read(ERIOAPI.exchangeRatesOfDate(date) + ERIOAPI.exchangeRatesFrom(base, currencies)+ ERIOAPI.KEY);
     }
 
     private String read(String urlRequest) {

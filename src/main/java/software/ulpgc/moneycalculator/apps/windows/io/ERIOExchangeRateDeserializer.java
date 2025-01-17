@@ -8,7 +8,6 @@ import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
 public class ERIOExchangeRateDeserializer implements ExchangeRateDeserializer {
     @Override
     public Object deserialize(String line) {
-        System.out.println(line);
         return new Gson().fromJson(line, ExchangeRatesGetResponse.class);
     }
 }

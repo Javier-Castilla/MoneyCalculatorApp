@@ -7,7 +7,7 @@ public enum Colors {
     HoverBlack(new Color(61, 61, 61)),
     PressedBlack(new Color(41, 41, 41)),
     LightGray(new Color(204, 204, 204)),
-    AlmostWhite(new Color(236, 208, 227)),
+    AlmostWhite(new Color(231, 228, 228)),
     HoverWhite(new Color(230, 230, 230)),
     PressedWhite(new Color(255, 255, 255));
 

@@ -1,14 +1,15 @@
 package software.ulpgc.moneycalculator.apps.windows;
 
 import software.ulpgc.moneycalculator.apps.windows.io.*;
+import software.ulpgc.moneycalculator.apps.windows.io.pojo.ProgramInformation;
 import software.ulpgc.moneycalculator.apps.windows.view.MainFrame;
 import software.ulpgc.moneycalculator.architecture.control.*;
+import software.ulpgc.moneycalculator.architecture.control.commands.*;
 import software.ulpgc.moneycalculator.architecture.io.ExchangeRateLoader;
 import software.ulpgc.moneycalculator.apps.windows.io.JsonFileCurrencyLoader;
 import software.ulpgc.moneycalculator.apps.windows.io.JsonFileCurrencyReader;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
 import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
-import software.ulpgc.moneycalculator.mocks.MockExchangeRateLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,13 +19,20 @@ public class Main {
     private static MainFrame frame;
     private static Map<String, Currency> currencies;
     private static Map<Currency, ExchangeRate> exchangeRates;
-    private static ExchangeRateLoader loader;
 
     public static void main(String[] args) throws Exception {
         createMainFrame()
-                .defineCurrencies(loadCurrencies().values().stream().sorted(Comparator.comparing(Currency::name)).toList())
-                .defineCommands(createCommands(currencies, loadExchangeRates()))
+                .defineCommands(createCommands(new CommandFactory(), loadCurrencies(), loadExchangeRates()))
+                .defineCurrencies(currencies.values().stream().sorted(Comparator.comparing(Currency::name)).toList())
+                .defineProgramInformation(loadProgramInformation())
                 .setVisible(true);
+    }
+
+    private static ProgramInformation loadProgramInformation() {
+        return new JsonFileProgramInformationLoader(
+                new JsonFileProgramInformationReader(new File(Main.class.getClassLoader().getResource("programInformation.json").getFile())),
+                new JsonFileProgramInformationDeserializer()
+        ).load();
     }
 
     private static Map<Currency, ExchangeRate> loadExchangeRates() {
@@ -37,7 +45,13 @@ public class Main {
     }
 
     private static ExchangeRateLoader createLoader() {
-        return new MockExchangeRateLoader(currencies);
+        return new ERIOExchangeRateLoader(
+                new ERIOExchangeRateReader(),
+                new ERIOExchangeRateDeserializer(),
+                new ERIOExchangeRatesAdapter(currencies),
+                currencies
+        );
+        //return new MockExchangeRateLoader(currencies);
     }
 
     private static Map<String, Currency> loadCurrencies() throws IOException {
@@ -49,25 +63,24 @@ public class Main {
         return currencies;
     }
 
-    private static Map<String, Command> createCommands(Map<String, Currency> currencies, Map<Currency, ExchangeRate> exchanges) throws IOException {
-        Map<String, Command> commands = new HashMap<>();
-        commands.put("calculate",  new CalculateCommand(frame.getFromMoneyDialog(), frame.getToMoneyDialog(), frame.getDateDialog(), exchanges, new MockExchangeRateLoader(currencies)));
-        commands.put("toggle_representation", new ToggleRendererCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
-        commands.put("invert", new InvertCommand(frame.getFromMoneyDialog(), frame.getToMoneyDialog()));
-        commands.put("display_exchangeRate", new DisplayExchangeRateCommand(frame.getFromMoneyDialog(), frame.getToMoneyDialog(), frame.getExchangeRateDisplay(), exchanges));
-        commands.put("load_rates", new LoadCommand(frame.getDateDialog(), exchanges, currencies, loader));
-        commands.put("open_settings", new OpenSettingsCommand());
-        commands.get("display_exchangeRate").execute();
-        commands.put("toggle_order", new ToggleOrderCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
-        commands.put("set_order", new SetOrderCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
-        commands.put("name_order", new NameOrderCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
-        commands.put("code_order", new CodeOrderCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
-        commands.put("custom_date", new SetCustomDateCommand(frame.getDateDialog()));
+    private static Map<String, CommandFactory.Builder> createCommands(CommandFactory commandFactory, Map<String, Currency> currencies, Map<Currency, ExchangeRate> exchanges) throws IOException {
+        Map<String, CommandFactory.Builder> commands = new HashMap<>();
+        commands.put("calculate", () -> new CalculateCommand(frame.getFromMoneyDialog(), frame.getToMoneyDialog(), exchanges));
+        commands.put("toggle_representation", () -> new ToggleRendererCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
+        commands.put("invert", () -> new InvertCommand(frame.getFromMoneyDialog(), frame.getToMoneyDialog()));
+        commands.put("display_exchangeRate", () -> new DisplayExchangeRateCommand(frame.getFromMoneyDialog(), frame.getToMoneyDialog(), frame.getExchangeRateDisplay(), exchanges));
+        commands.put("load_rates", () -> new LoadCommand(frame.getDateDialog(), exchanges, createLoader()));
+        commands.put("toggle_order", () -> new ToggleOrderCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
+        commands.put("set_order", () -> new SetOrderCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
+        commands.put("name_order", () -> new NameOrderCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
+        commands.put("code_order", () -> new CodeOrderCommand(frame.getFromMoneyDialog().getCurrencyDialog(), frame.getToMoneyDialog().getCurrencyDialog()));
+        commands.put("custom_date", () -> new SetCustomDateCommand(frame.getDateDialog(), createLoader(), exchanges));
+        commands.put("current_date", () -> new SetCurrentDateCommand(frame.getDateDialog(), createLoader(), exchanges, currencies));
         return commands;
     }
 
     private static MainFrame createMainFrame() {
-        frame = new MainFrame();
+        frame = new MainFrame(new CommandFactory());
         return frame;
     }
 }

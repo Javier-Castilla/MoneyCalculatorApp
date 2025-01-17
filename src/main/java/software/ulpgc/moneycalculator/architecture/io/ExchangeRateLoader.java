@@ -10,6 +10,7 @@ import java.util.Map;
 
 public interface ExchangeRateLoader {
     Map<Currency, ExchangeRate> load() throws IOException;
+    Map<Currency, ExchangeRate> load(Map<Currency, ExchangeRate> exchangeRateMap) throws IOException;
     Map<Currency, ExchangeRate> load(LocalDate date, Currency... currencies) throws IOException;
-    ExchangeRate load(LocalDate date, Currency currency) throws IOException;
+    Map<Currency, ExchangeRate> load(Map<Currency, ExchangeRate> exchangeRateMap, LocalDate date, Currency... currencies) throws IOException;
 }

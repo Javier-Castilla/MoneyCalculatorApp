@@ -3,24 +3,24 @@ package software.ulpgc.moneycalculator.apps.windows.view;
 import software.ulpgc.moneycalculator.apps.windows.view.customization.Colors;
 import software.ulpgc.moneycalculator.apps.windows.view.customization.components.CustomSwingButton;
 import software.ulpgc.moneycalculator.apps.windows.view.customization.components.SwingDateEntry;
+import software.ulpgc.moneycalculator.architecture.control.CommandFactory;
 import software.ulpgc.moneycalculator.architecture.view.DateDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 
 public class SwingDateDialog extends JFrame implements DateDialog {
     private final SwingDateEntry dateEntry;
     private final CustomSwingButton button;
+    private final CommandFactory commandFactory;
     private DateMode dateMode;
 
-    public SwingDateDialog() {
+    public SwingDateDialog(CommandFactory commandFactory) {
+        this.commandFactory = commandFactory;
         this.dateMode = DateMode.Current;
         add(createDialogPanel(createDialogComponent(this.dateEntry = withListenerAddition(new SwingDateEntry()), this.button = createLoadButton())));
         setSize(350, 200);
@@ -86,7 +86,12 @@ public class SwingDateDialog extends JFrame implements DateDialog {
         button.setNormalColor(Colors.AlmostWhite.value());
         button.setHoverColor(Colors.HoverWhite.value());
         button.setPressedColor(Colors.PressedWhite.value());
-        button.addActionListener(e -> setVisible(false));
+        button.addActionListener(e -> {
+            commandFactory.get("load_rates").build().execute();
+            commandFactory.get("display_exchangeRate").build().execute();
+            commandFactory.get("calculate").build().execute();
+            setVisible(false);
+        });
         return button;
     }
 
@@ -125,15 +130,13 @@ public class SwingDateDialog extends JFrame implements DateDialog {
     }
 
     @Override
-    public DateDialog setDateMode(DateMode dateMode) {
+    public void setDateMode(DateMode dateMode) {
         this.dateMode = dateMode;
-        return this;
     }
 
     @Override
-    public DateDialog request() {
+    public void request() {
         setVisible(true);
-        return this;
     }
 
     public SwingDateEntry getDateEntry() {

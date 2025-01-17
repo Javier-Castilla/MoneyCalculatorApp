@@ -6,7 +6,5 @@ import java.time.LocalDate;
 
 public interface ExchangeRateReader {
     String read();
-
-
     String readOfDate(LocalDate date, Currency base, Currency... currencies);
 }

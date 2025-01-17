@@ -1,5 +1,6 @@
-package software.ulpgc.moneycalculator.architecture.control;
+package software.ulpgc.moneycalculator.architecture.control.commands;
 
+import software.ulpgc.moneycalculator.architecture.control.Command;
 import software.ulpgc.moneycalculator.architecture.io.ExchangeRateLoader;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
 import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
@@ -21,7 +22,9 @@ public class SetCurrentDateCommand implements Command {
 
     @Override
     public void execute() {
+        if (dateDialog.getDateMode().equals(DateDialog.DateMode.Current)) return;
         try {
+            exchangeRateMap.clear();
             exchangeRateMap.putAll(exchangeRateLoader.load());
             dateDialog.setDateMode(DateDialog.DateMode.Current);
         } catch (IOException e) {

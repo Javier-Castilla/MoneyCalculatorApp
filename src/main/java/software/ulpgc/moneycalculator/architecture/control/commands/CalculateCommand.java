@@ -1,5 +1,6 @@
-package software.ulpgc.moneycalculator.architecture.control;
+package software.ulpgc.moneycalculator.architecture.control.commands;
 
+import software.ulpgc.moneycalculator.architecture.control.Command;
 import software.ulpgc.moneycalculator.architecture.io.ExchangeRateLoader;
 import software.ulpgc.moneycalculator.architecture.view.DateDialog;
 import software.ulpgc.moneycalculator.architecture.view.MoneyDialog;
@@ -13,16 +14,12 @@ import java.util.Map;
 public class CalculateCommand implements Command {
     private final MoneyDialog fromMoneyDialog;
     private final MoneyDialog toMoneyDialog;
-    private final DateDialog dateDialog;
     private final Map<Currency, ExchangeRate> exchangeRates;
-    private final ExchangeRateLoader exchangeRateLoader;
 
-    public CalculateCommand(MoneyDialog fromMoneyDialog, MoneyDialog toMoneyDialog, DateDialog dateDialog, Map<Currency, ExchangeRate> exchangeRates, ExchangeRateLoader exchangeRateLoader) {
+    public CalculateCommand(MoneyDialog fromMoneyDialog, MoneyDialog toMoneyDialog, Map<Currency, ExchangeRate> exchangeRates) {
         this.fromMoneyDialog = fromMoneyDialog;
         this.toMoneyDialog = toMoneyDialog;
-        this.dateDialog = dateDialog;
         this.exchangeRates = exchangeRates;
-        this.exchangeRateLoader = exchangeRateLoader;
     }
 
     @Override
@@ -59,18 +56,8 @@ public class CalculateCommand implements Command {
     }
 
     private double calculateExchange(double amount) {
-        try {
-            double fromCurrencyRate = dateDialog.getDateMode() == DateDialog.DateMode.Current ?
-                    exchangeRates.get(fromMoneyDialog.get().currency()).rate() :
-                    exchangeRateLoader.load(dateDialog.get(), toMoneyDialog.getCurrencyDialog().get()).rate();
-            double toCurrencyRate = dateDialog.getDateMode() == DateDialog.DateMode.Current ?
-                    exchangeRates.get(toMoneyDialog.get().currency()).rate() :
-                    exchangeRateLoader.load(dateDialog.get(), toMoneyDialog.getCurrencyDialog().get()).rate();
-            System.out.println(fromCurrencyRate + " " + toCurrencyRate);
-            System.out.println();
-            return (amount / fromCurrencyRate) * toCurrencyRate;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        double fromCurrencyRate = exchangeRates.get(getFocusedDialog().get().currency()).rate();
+        double toCurrencyRate = exchangeRates.get(getNonFocusedDialog().get().currency()).rate();
+        return (amount / fromCurrencyRate) * toCurrencyRate;
     }
 }

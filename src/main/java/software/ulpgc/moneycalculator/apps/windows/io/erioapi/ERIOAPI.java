@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 public class ERIOAPI {
-    public final static String KEY = "ea7f76ea998e63ab1e2dfac6d3c850a9";
+    public final static String KEY = "7e5ea59922afd6f5ca33401bbca5573a";
     public final static String SYMBOLS = "https://api.exchangeratesapi.io/v1/symbols?access_key=";
     public final static String CURRENT_EXCHANGE_RATES = "https://api.exchangeratesapi.io/v1/latest?access_key=";
     public final static String FROM_TO_EXCHANGE_RATES = "&base=%s&symbols=%s";
@@ -34,13 +34,6 @@ public class ERIOAPI {
     }
 
     public static String exchangeRatesOfDate(LocalDate date) {
-        // Crear un formateador de fecha con el formato deseado
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        // Formatear la fecha
-        String formattedDate = formatter.format(date);
-
-        // Reemplazar "latest" por la fecha formateada
-        return CURRENT_EXCHANGE_RATES.replace("latest", formattedDate);
+        return CURRENT_EXCHANGE_RATES.replace("latest", date.toString());
     }
 }

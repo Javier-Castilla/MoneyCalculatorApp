@@ -1,5 +1,6 @@
-package software.ulpgc.moneycalculator.architecture.control;
+package software.ulpgc.moneycalculator.architecture.control.commands;
 
+import software.ulpgc.moneycalculator.architecture.control.Command;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
 import software.ulpgc.moneycalculator.architecture.view.CurrencyDialog;
 
@@ -12,7 +13,8 @@ public class ToggleOrderCommand implements Command {
     private final CurrencyDialog fromCurrencyDialog;
     private final CurrencyDialog toCurrencyDialog;
     private final static Map<CurrencyDialog.OrderDirection, CurrencyDialog.OrderDirection> negationMap =
-            Map.of(CurrencyDialog.OrderDirection.DescendingOrder, CurrencyDialog.OrderDirection.AscendingOrder, CurrencyDialog.OrderDirection.AscendingOrder, CurrencyDialog.OrderDirection.DescendingOrder);
+            Map.of(CurrencyDialog.OrderDirection.DescendingOrder, CurrencyDialog.OrderDirection.AscendingOrder,
+                    CurrencyDialog.OrderDirection.AscendingOrder, CurrencyDialog.OrderDirection.DescendingOrder);
 
     public ToggleOrderCommand(CurrencyDialog fromCurrencyDialog, CurrencyDialog toCurrencyDialog) {
         this.fromCurrencyDialog = fromCurrencyDialog;
@@ -43,8 +45,8 @@ public class ToggleOrderCommand implements Command {
 
     private Comparator<? super Currency> getComparatorFor(CurrencyDialog currencyDialog) {
         return switch (currencyDialog.getOrderMode()) {
-            case NameOrder -> reverseComparator(Comparator.comparing(Currency::name), isAscendingOrdered(currencyDialog.getOrderDirection()));
-            case CodeOrder -> reverseComparator(Comparator.comparing(Currency::code), isAscendingOrdered(currencyDialog.getOrderDirection()));
+            case NameOrder -> reverseComparator(Comparator.comparing(Currency::name), !isAscendingOrdered(currencyDialog.getOrderDirection()));
+            case CodeOrder -> reverseComparator(Comparator.comparing(Currency::code), !isAscendingOrdered(currencyDialog.getOrderDirection()));
         };
     }
 
