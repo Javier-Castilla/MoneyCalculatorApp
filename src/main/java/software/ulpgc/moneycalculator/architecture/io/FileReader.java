@@ -1,5 +1,5 @@
 package software.ulpgc.moneycalculator.architecture.io;
 
-public interface ProgramInformationReader {
+public interface FileReader {
     String read();
 }

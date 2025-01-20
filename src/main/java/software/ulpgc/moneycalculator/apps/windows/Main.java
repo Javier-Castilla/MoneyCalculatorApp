@@ -7,11 +7,10 @@ import software.ulpgc.moneycalculator.architecture.control.*;
 import software.ulpgc.moneycalculator.architecture.control.commands.*;
 import software.ulpgc.moneycalculator.architecture.io.ExchangeRateLoader;
 import software.ulpgc.moneycalculator.apps.windows.io.JsonFileCurrencyLoader;
-import software.ulpgc.moneycalculator.apps.windows.io.JsonFileCurrencyReader;
+import software.ulpgc.moneycalculator.apps.windows.io.JsonFileReader;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
 import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -30,7 +29,7 @@ public class Main {
 
     private static ProgramInformation loadProgramInformation() {
         return new JsonFileProgramInformationLoader(
-                new JsonFileProgramInformationReader(new File(Main.class.getClassLoader().getResource("programInformation.json").getFile())),
+                new JsonFileReader("programInformation.json"),
                 new JsonFileProgramInformationDeserializer()
         ).load();
     }
@@ -51,12 +50,11 @@ public class Main {
                 new ERIOExchangeRatesAdapter(currencies),
                 currencies
         );
-        //return new MockExchangeRateLoader(currencies);
     }
 
     private static Map<String, Currency> loadCurrencies() throws IOException {
         currencies = new JsonFileCurrencyLoader(
-                new JsonFileCurrencyReader(new File(Main.class.getClassLoader().getResource("currencies.json").getFile())),
+                new JsonFileReader("currencies.json"),
                 new JsonFileCurrencyDeserializer(),
                 new JsonFileCurrencyAdapter()
         ).load();

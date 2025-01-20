@@ -23,7 +23,7 @@ public class NumericFilter extends DocumentFilter {
         String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
 
         if (input.equals(".")) {
-            return !currentText.contains(".") && currentText.length() > 0;
+            return !currentText.contains(".") && !currentText.isEmpty();
         }
 
         return input.matches("(^0\\.00$|\\d+.\\d+|\\d|)");
